@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NFCulT</string>
+    <string name="title_section1">LOCK Attack</string>
+    <string name="title_section2">TIME Attack</string>
+    <string name="title_section3">REPLAY Attack</string>
+    <string name="title_section4">Credits</string>
+    <string name="action_settings">Settings</string>
+    <string name="tab">&#9;&#9;</string>
+    <string name="title"><b>NFCulT</b></string>
+    <string name="creditz"><![CDATA[<html>
+        <br><br>Developed with such love by <b>bughardy<b/></br></br>
+        <br>Version: 0.9.1</br>
+        
+        <br><br><b>Developer: </b><a href="https://www.twitter.com/_bughardy_">bughardy</a></br></br>       
+        <br><br><b>Info at: </b><a href="https://www.github.com/securenetwork/nfcult">http://www.github.com/securenetwork/NFCulT</a></i></br></br>
+        ]]>
+		</string>
+</resources>
