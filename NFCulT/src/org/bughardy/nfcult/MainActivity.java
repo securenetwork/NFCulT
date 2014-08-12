@@ -178,18 +178,20 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     //Read all pages of Mifare UL and writes them in a file. One line per page. ( No compatibility yet wih nfc-tools dumps )
     private void readUL(String fileName) throws IOException {
 		
-			MifareUltralight ultralight = MifareUltralight.get(mytag);
-			ultralight.connect();
+			//MifareUltralight ultralight = MifareUltralight.get(mytag);
+    		NfcA nfca_tag = NfcA.get(mytag);
+    		nfca_tag.connect();
 			String[] page = new String[30];
 			try {
-				for(int i = 0; i < 16; i++) {
-					page[i] = byteArrayToHexString(ultralight.readPages(i)).substring(0, 8) + "\n";
+				for(byte i = 0; i < 16; i++) {
+					byte readPacket[] = {(byte) 0x30, i};
+					page[i] = byteArrayToHexString(nfca_tag.transceive(readPacket)).substring(0, 8) + "\n";
 					FileOutputStream fos = openFileOutput(fileName+".mfd", Context.MODE_APPEND);
 					fos.write(page[i].getBytes());
 					fos.close();
 				}
-				ultralight.close();
-		} catch(Exception e) { e.printStackTrace(); }
+				nfca_tag.close();
+		} catch(Exception e) { Toast.makeText(ctx, "something wrong", Toast.LENGTH_LONG ).show(); e.printStackTrace(); }
     }
 
     //Read a previous saved dump and write it on the Mifare UL. If write is okay returns green line in textview, otherwise it returns red line. 
@@ -200,24 +202,27 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     	   FileInputStream fis = openFileInput(file);
     	   InputStreamReader isr = new InputStreamReader(fis);
     	   BufferedReader bufferedReader = new BufferedReader(isr);
-		   MifareUltralight ultralight = MifareUltralight.get(mytag);
-		   ultralight.connect();
+    	   NfcA nfca_tag = NfcA.get(mytag);
+		   nfca_tag.connect();
     	   String line;
-    	   int i = 0;
+    	   byte i = 0;
+    	   
     	   boolean error = false;
    		   TextView text = (TextView)findViewById(R.id.textView3);
 		   text.setText("");
    		   while ((line = bufferedReader.readLine()) != null) {
    	    	   StringBuilder sb = new StringBuilder();
+   	    	   byte cmd[] = {(byte) 0xa2, i};
+   	    	   line = byteArrayToHexString(cmd) + line;
    	    	   error = false;
    			   try {   			   
-   			   ultralight.writePage(i, hexStringToByteArray(line));
+   				   nfca_tag.transceive(hexStringToByteArray(line));
    			   } catch(Exception e) { 
    				   error = true;
-   	   			   if ( ultralight.isConnected() ) {
-   	   				   ultralight.close();
+   	   			   if ( nfca_tag.isConnected() ) {
+   	   				nfca_tag.close();
    	   			   }
-   	   			   ultralight.connect();
+   	   			nfca_tag.connect();
    			   }
    			   i++;
    			   if(toShow==1) {
@@ -241,8 +246,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
    			   .setTitle("Results:")
    			   .show();
    		   }
-   		   if( ultralight.isConnected() ) {
-   			   ultralight.close();
+   		   if( nfca_tag.isConnected() ) {
+   			nfca_tag.close();
    		   }
    	}
     
@@ -269,17 +274,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     //Set OTP sector in read-only mode
     private void crack() {
 		
-		MifareUltralight ultralight = MifareUltralight.get(mytag);
+		//MifareUltralight ultralight = MifareUltralight.get(mytag);
+    	NfcA nfca_tag = NfcA.get(mytag);
 		boolean success=false;
 		try {
-            ultralight.connect();
-            ultralight.writePage(2 ,new byte[] {0x04, 0x11,  (byte) 0xfa, 0x00});
+			nfca_tag.connect();
+			nfca_tag.transceive(new byte[] {(byte)0xa2 ,0x03, 0x04, 0x11, (byte) 0xfa, 0x00});
             success=true;
         } catch (IOException e) {
         	e.printStackTrace();
         } finally {
             try {
-                ultralight.close();
+            	nfca_tag.close();
             } catch (IOException e) {
             	e.printStackTrace();
             }
@@ -424,14 +430,14 @@ protected void onNewIntent(Intent intent){
 			boolean validtech=false;
 			int i=0;
 			while(i<techlist.length){
-				if(techlist[i].equals("android.nfc.tech.MifareUltralight")){
+				if(techlist[i].equals("android.nfc.tech.NfcA")){
 					validtech=true;
 					break;
 				}
 				i++;
 			}
 			if (validtech){
-				Toast.makeText(ctx, "Tag found", Toast.LENGTH_LONG ).show();
+				Toast.makeText(ctx, "NfcA Tag found", Toast.LENGTH_LONG ).show();
 				
 			}
 			else {
@@ -464,17 +470,17 @@ public void onResume(){
 			boolean validtech=false;
 			int i=0;
 			while(i<techlist.length){
-				if(techlist[i].equals("android.nfc.tech.MifareUltralight")){
+				if(techlist[i].equals("android.nfc.tech.NfcA")){
 					validtech=true;
 					break;
 				}
 				i++;
 			}
 			if (validtech){
-				Toast.makeText(ctx, "Tag found", Toast.LENGTH_LONG ).show();
+				Toast.makeText(ctx, "NfcA Tag found", Toast.LENGTH_LONG ).show();
 			}
 			else {
-				Toast.makeText(ctx, "Tag found, but doesn't seems to be a Mifare UL", Toast.LENGTH_LONG ).show();
+				Toast.makeText(ctx, "Tag found, but doesn't seems to be a NfcA", Toast.LENGTH_LONG ).show();
 			}
 		}
 		else {
@@ -561,7 +567,7 @@ public void onResume(){
     
     public static class PlaceholderFragment extends Fragment {
     	
-		MainActivity activity = (MainActivity) getActivity();
+		MainActivity activity;
 		/*Calendar cal0 = Calendar.getInstance();
 		int Year = cal0.get(Calendar.YEAR);
 		int Month = cal0.get(Calendar.MONTH);
@@ -580,6 +586,8 @@ public void onResume(){
         }
 
         public PlaceholderFragment() {
+        	
+        	 activity = (MainActivity) getActivity();
         	
         }
         
@@ -777,6 +785,7 @@ public void onResume(){
 				readDump.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						final MainActivity activity = (MainActivity) getActivity();
 						final ArrayList<String> options= activity.getDumpList();
 						final CharSequence[] cs = options.toArray(new CharSequence[options.size()]);
 						AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -799,6 +808,7 @@ public void onResume(){
 				manageDump.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						final MainActivity activity = (MainActivity) getActivity();
 						final ArrayList<String> options= activity.getDumpList();
 						final CharSequence[] cs = options.toArray(new CharSequence[options.size()]);
 						AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -957,27 +967,72 @@ public void onResume(){
         		});
         		//Defining actions for Edit Button
         		btnEdt.setOnClickListener(new View.OnClickListener() {
+        			NfcA nfca_tag;
         			public void onClick(View v) {
+        				
         				try {
-        					MifareUltralight ultralight = MifareUltralight.get(mytag);
-        			        ultralight.connect();
-        			        page0.setText(byteArrayToHexString(ultralight.readPages(0)).substring(0, 8));
-        			        page1.setText(byteArrayToHexString(ultralight.readPages(1)).substring(0, 8));
-        			        page2.setText(byteArrayToHexString(ultralight.readPages(2)).substring(0, 8));
-        			        page3.setText(byteArrayToHexString(ultralight.readPages(3)).substring(0, 8));
-        			        page4.setText(byteArrayToHexString(ultralight.readPages(4)).substring(0, 8));
-        			        page5.setText(byteArrayToHexString(ultralight.readPages(5)).substring(0, 8));
-        			        page6.setText(byteArrayToHexString(ultralight.readPages(6)).substring(0, 8));
-        			        page7.setText(byteArrayToHexString(ultralight.readPages(7)).substring(0, 8));
-        			        page8.setText(byteArrayToHexString(ultralight.readPages(8)).substring(0, 8));
-        			        page9.setText(byteArrayToHexString(ultralight.readPages(9)).substring(0, 8));
-        			        page10.setText(byteArrayToHexString(ultralight.readPages(10)).substring(0, 8));
-        			        page11.setText(byteArrayToHexString(ultralight.readPages(11)).substring(0, 8));
-        			        page12.setText(byteArrayToHexString(ultralight.readPages(12)).substring(0, 8));
-        			        page13.setText(byteArrayToHexString(ultralight.readPages(13)).substring(0, 8));
-        			        page14.setText(byteArrayToHexString(ultralight.readPages(14)).substring(0, 8));
-        			        page15.setText(byteArrayToHexString(ultralight.readPages(15)).substring(0, 8));
-        			        ultralight.close();
+        					nfca_tag = NfcA.get(mytag);
+        				} catch(Exception e) {
+        					Toast.makeText(getActivity(), "ERR: NfcA.get", Toast.LENGTH_SHORT).show();
+        					e.printStackTrace();
+        				}
+        			        
+        				try {
+        					nfca_tag.connect();
+        					
+        				} catch(Exception e) {
+        					Toast.makeText(getActivity(), "ERR: nfca_tag.connect", Toast.LENGTH_SHORT).show();
+        					e.printStackTrace();
+        				}
+        				try {
+        					
+        					byte readPacket0[] = {(byte) 0x30, 0x00};
+        					byte readPacket1[] = {(byte) 0x30, 0x01};
+        					byte readPacket2[] = {(byte) 0x30, 0x02};
+        					byte readPacket3[] = {(byte) 0x30, 0x03};
+        					byte readPacket4[] = {(byte) 0x30, 0x04};
+        					byte readPacket5[] = {(byte) 0x30, 0x05};
+        					byte readPacket6[] = {(byte) 0x30, 0x06};
+        					byte readPacket7[] = {(byte) 0x30, 0x07};
+        					byte readPacket8[] = {(byte) 0x30, 0x08};
+        					byte readPacket9[] = {(byte) 0x30, 0x09};
+        					byte readPacket10[] = {(byte) 0x30, 0x0a};
+        					byte readPacket11[] = {(byte) 0x30, 0x0b};
+        					byte readPacket12[] = {(byte) 0x30, 0x0c};
+        					byte readPacket13[] = {(byte) 0x30, 0x0d};
+        					byte readPacket14[] = {(byte) 0x30, 0x0e};
+        					byte readPacket15[] = {(byte) 0x30, 0x0f}; 
+        			    	
+        					
+        					/*boolean success;
+        			    	try {
+        			    		NfcA brokenTag = NfcA.get(mytag);
+        			    		brokenTag.connect();
+        			    		nfca_tag.transceive(readPacket);
+        			    		brokenTag.close();
+        					
+        					*/
+        					
+        					
+        					
+        					
+        			        page0.setText(byteArrayToHexString(nfca_tag.transceive(readPacket0)).substring(0, 8));
+        			        page1.setText(byteArrayToHexString(nfca_tag.transceive(readPacket1)).substring(0, 8));
+        			        page2.setText(byteArrayToHexString(nfca_tag.transceive(readPacket2)).substring(0, 8));
+        			        page3.setText(byteArrayToHexString(nfca_tag.transceive(readPacket3)).substring(0, 8));
+        			        page4.setText(byteArrayToHexString(nfca_tag.transceive(readPacket4)).substring(0, 8));
+        			        page5.setText(byteArrayToHexString(nfca_tag.transceive(readPacket5)).substring(0, 8));
+        			        page6.setText(byteArrayToHexString(nfca_tag.transceive(readPacket6)).substring(0, 8));
+        			        page7.setText(byteArrayToHexString(nfca_tag.transceive(readPacket7)).substring(0, 8));
+        			        page8.setText(byteArrayToHexString(nfca_tag.transceive(readPacket8)).substring(0, 8));
+        			        page9.setText(byteArrayToHexString(nfca_tag.transceive(readPacket9)).substring(0, 8));
+        			        page10.setText(byteArrayToHexString(nfca_tag.transceive(readPacket10)).substring(0, 8));
+        			        page11.setText(byteArrayToHexString(nfca_tag.transceive(readPacket11)).substring(0, 8));
+        			        page12.setText(byteArrayToHexString(nfca_tag.transceive(readPacket12)).substring(0, 8));
+        			        page13.setText(byteArrayToHexString(nfca_tag.transceive(readPacket13)).substring(0, 8));
+        			        page14.setText(byteArrayToHexString(nfca_tag.transceive(readPacket14)).substring(0, 8));
+        			        page15.setText(byteArrayToHexString(nfca_tag.transceive(readPacket15)).substring(0, 8));
+        			        nfca_tag.close();
         				} catch(Exception e) {
         					Toast.makeText(getActivity(), "Error reading Tag..", Toast.LENGTH_SHORT).show();
         					e.printStackTrace();
@@ -1039,25 +1094,39 @@ public void onResume(){
         					}        						
         					if(continueBcc[0] == true) {
         						//Write pages to the ticket
-        						MifareUltralight ultralight = MifareUltralight.get(mytag);
-        						ultralight.connect();
-        						ultralight.writePage(0, hexStringToByteArray(page0.getText().toString()));
-        						ultralight.writePage(1, hexStringToByteArray(page1.getText().toString()));
-        						ultralight.writePage(2, hexStringToByteArray(page2.getText().toString()));
-        						ultralight.writePage(3, hexStringToByteArray(page3.getText().toString()));
-        						ultralight.writePage(4, hexStringToByteArray(page4.getText().toString()));
-        						ultralight.writePage(5, hexStringToByteArray(page5.getText().toString()));
-        						ultralight.writePage(6, hexStringToByteArray(page6.getText().toString()));
-        						ultralight.writePage(7, hexStringToByteArray(page7.getText().toString()));
-        						ultralight.writePage(8, hexStringToByteArray(page8.getText().toString()));
-        						ultralight.writePage(9, hexStringToByteArray(page9.getText().toString()));
-        						ultralight.writePage(10, hexStringToByteArray(page10.getText().toString()));
-        						ultralight.writePage(11, hexStringToByteArray(page11.getText().toString()));
-        						ultralight.writePage(12, hexStringToByteArray(page12.getText().toString()));
-        						ultralight.writePage(13, hexStringToByteArray(page13.getText().toString()));
-        						ultralight.writePage(14, hexStringToByteArray(page14.getText().toString()));
-        						ultralight.writePage(15, hexStringToByteArray(page15.getText().toString()));
-        						ultralight.close();
+        						
+        						/*boolean success;
+            			    	try {
+            			    		NfcA brokenTag = NfcA.get(mytag);
+            			    		brokenTag.connect();
+            			    		nfca_tag.transceive(readPacket);
+            			    		brokenTag.close();
+            					
+            					*/
+            					
+        						
+        						NfcA nfca_tag = NfcA.get(mytag);
+        						//MifareUltralight ultralight = MifareUltralight.get(mytag);
+        						//nfca_tag.connect();
+        						nfca_tag.connect();
+        						nfca_tag.transceive(hexStringToByteArray("A200"+page0.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A201"+page1.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A202"+page2.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A203"+page3.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A204"+page4.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A205"+page5.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A206"+page6.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A207"+page7.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A208"+page8.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A209"+page9.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A20A"+page10.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A20B"+page11.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A20C"+page12.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A20D"+page13.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A20E"+page14.getText().toString()));
+        						nfca_tag.transceive(hexStringToByteArray("A20F"+page15.getText().toString()));
+        						
+        						nfca_tag.close();
         					}
         				} catch(Exception e){
         					Toast.makeText(getActivity(), "Error writing to Tag..", Toast.LENGTH_SHORT).show();
