@@ -92,9 +92,9 @@ public final class R {
         public static final int section_label=0x7f08003a;
         public static final int textView0=0x7f080038;
         public static final int textView1=0x7f080026;
-        public static final int textView2=0x7f080044;
+        public static final int textView2=0x7f080045;
         public static final int textView3=0x7f08003c;
-        public static final int timePicker1=0x7f080045;
+        public static final int timePicker1=0x7f080044;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

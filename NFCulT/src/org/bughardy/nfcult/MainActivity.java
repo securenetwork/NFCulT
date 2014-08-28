@@ -124,18 +124,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     //Returns a list of saved dumps.
     private ArrayList<String> getDumpList() {
     	
-    	String[] savedDumps;
+    	String[] savedDumps = {""};
     	ArrayList<String> dumps = new ArrayList<String>();
     	savedDumps = getApplicationContext().fileList();
     	for(int i=0; i<savedDumps.length; i++) {
     		try {
-    			//System.out.println(savedDumps[i].substring(savedDumps[i].lastIndexOf(".")));
-    		if(savedDumps[i].substring(savedDumps[i].lastIndexOf(".")).equals(".mfd")) {
-    			dumps.add(savedDumps[i]);
+    			if(savedDumps[i].substring(savedDumps[i].lastIndexOf(".")).equals(".mfd")) {
+    				dumps.add(savedDumps[i]);
     		}
-    		
     		} catch (Exception e) {
-    			//Do nothing. Not valid dump!
+    			e.printStackTrace();
     		}
     	}
     	return dumps;
@@ -777,12 +775,14 @@ public void onResume(){
 				readDump.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
 						final ArrayList<String> options= activity.getDumpList();
 						final CharSequence[] cs = options.toArray(new CharSequence[options.size()]);
 						AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 						builder.setTitle("Select dump: ");
 						builder.setItems(cs, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
 							try {
 									activity.getDump((String) cs[whichButton], 1);
 							} catch (Exception e) {
@@ -799,6 +799,7 @@ public void onResume(){
 				manageDump.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
 						final ArrayList<String> options= activity.getDumpList();
 						final CharSequence[] cs = options.toArray(new CharSequence[options.size()]);
 						AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -807,6 +808,7 @@ public void onResume(){
 						builder.setItems(cs, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							try {
+								MainActivity activity = (MainActivity) getActivity();
 								final String choosenFile = (String) cs[whichButton];
 								final String[] options= {"Delete", "Rename"};
 								AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -814,6 +816,7 @@ public void onResume(){
 								builder.setItems(options, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int whichButton) {
 									try {
+										MainActivity activity = (MainActivity) getActivity();
 										//Action: DELETE
 										if(options[whichButton] == "Delete") {
 											File file = new File(activity.getFilesDir(), choosenFile);
@@ -831,6 +834,7 @@ public void onResume(){
 											alert.setView(input);
 											alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog, int whichButton) {
+												MainActivity activity = (MainActivity) getActivity();
 												String path = input.getText().toString();
 												File renameFile = new File(activity.getFilesDir(), path);
 												boolean result =  file.renameTo(renameFile);
