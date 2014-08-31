@@ -57,15 +57,14 @@ public final class R {
         public static final int TextView8=0x7f08002d;
         public static final int TextView9=0x7f08002e;
         public static final int button1=0x7f08003b;
-        public static final int button10=0x7f080040;
         public static final int button11=0x7f080036;
         public static final int button12=0x7f080013;
         public static final int button2=0x7f08003d;
         public static final int button3=0x7f08003f;
         public static final int button4=0x7f08003e;
-        public static final int button5=0x7f080043;
-        public static final int button6=0x7f080042;
-        public static final int button7=0x7f080041;
+        public static final int button5=0x7f080042;
+        public static final int button6=0x7f080041;
+        public static final int button7=0x7f080040;
         public static final int button8=0x7f080015;
         public static final int button9=0x7f080037;
         public static final int datePicker2=0x7f080012;
@@ -92,9 +91,9 @@ public final class R {
         public static final int section_label=0x7f08003a;
         public static final int textView0=0x7f080038;
         public static final int textView1=0x7f080026;
-        public static final int textView2=0x7f080045;
+        public static final int textView2=0x7f080044;
         public static final int textView3=0x7f08003c;
-        public static final int timePicker1=0x7f080044;
+        public static final int timePicker1=0x7f080043;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

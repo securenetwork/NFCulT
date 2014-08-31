@@ -58,15 +58,6 @@
         android:text="Use the &apos;Save Dump&apos; button to save a new ticket.\n\nUse the &apos;Use Dump&apos; button to read and write on a tag a saved ticket.\n\nUse &apos;Manage dumps&apos; button to rename or delete saved dumps." />
 
     <Button
-        android:id="@+id/button10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button4"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:text="AutoReplay" />
-
-    <Button
         android:id="@+id/button2"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
