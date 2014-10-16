@@ -139,6 +139,36 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     	return dumps;
     }
     
+    //Convert Hex to Dec
+    private String HextoDec(String page) {
+		String returnValue = String.valueOf(Integer.parseInt(page, 16));	
+    	return returnValue;
+    }
+    //Convert Bin to Dec
+    private String BintoDec(String page) {
+		String returnValue = String.valueOf(Integer.parseInt(page, 2));	
+    	return returnValue;
+    }
+    //Convert Dec to Hex
+    private String DectoHex(String page) {
+		String returnValue = Integer.toHexString(Integer.valueOf(page,10));	
+    	return returnValue;
+    }
+    //Convert Bin to Hex
+    private String BintoHex(String page) {
+		String returnValue = Integer.toHexString(Integer.valueOf(page,2));	
+    	return returnValue;
+    }
+    
+    private String DectoBin(String page) {
+		String returnValue = Integer.toBinaryString(Integer.valueOf(page,10));	
+    	return returnValue;
+    }
+    private String HextoBin(String page) {
+		String returnValue = Integer.toBinaryString(Integer.valueOf(page,16));	
+    	return returnValue;
+    }
+      
     //Read all pages of Mifare UL and writes them in a file. One line per page. ( No compatibility yet wih nfc-tools dumps )
     private void readUL(String fileName) throws IOException {
 		
@@ -500,7 +530,7 @@ public void onResume(){
         @Override
         public int getCount() {
         	
-            return 5; //Actually there are 5 pages
+            return 6; //Actually there are 6 pages
         }
 
         @Override
@@ -514,10 +544,12 @@ public void onResume(){
                     return getString(R.string.title_section2).toUpperCase(l);
                 case 2:
                     return getString(R.string.title_section3).toUpperCase(l);
-                case 4:
+                case 5:
                 	return getString(R.string.title_section4).toUpperCase(l);
                 case 3:
                 	return "Custom Edit".toUpperCase(l);
+                case 4:
+                	return "Edit Dump".toUpperCase(l);
             }
             return null;
         }
@@ -526,13 +558,7 @@ public void onResume(){
     public static class PlaceholderFragment extends Fragment {
     	
 		MainActivity activity = (MainActivity) getActivity();
-		/*Calendar cal0 = Calendar.getInstance();
-		int Year = cal0.get(Calendar.YEAR);
-		int Month = cal0.get(Calendar.MONTH);
-		int Day = cal0.get(Calendar.DAY_OF_MONTH);
-		int hour = cal0.get(Calendar.HOUR_OF_DAY);
-		int min = cal0.get(Calendar.MINUTE);
-		boolean Read = false;*/ //to check if possible to delete 
+		//to check if possible to delete 
         private static final String ARG_SECTION_NUMBER = "section_number";
         
         public static PlaceholderFragment newInstance(int sectionNumber) {
@@ -824,7 +850,7 @@ public void onResume(){
         	}
         	
         	//Creditz page
-        	if ( page == 5 ) {
+        	if ( page == 6 ) {
         		
         		View rootView = inflater.inflate(R.layout.fragment_four, container, false);
         		TextView text0 = (TextView) rootView.findViewById(R.id.textView0);
@@ -1003,10 +1029,871 @@ public void onResume(){
         		});
                 return rootView;
         	} 
+        	
+        	if( page == 5 ) {
+        		
+                View rootView = inflater.inflate(R.layout.fragment_edit_dump, container, false);
+                Button btnEdt = ( Button ) rootView.findViewById(R.id.button8);
+                Button btnWrt = ( Button ) rootView.findViewById(R.id.button11);
+                Button btnSave = ( Button ) rootView.findViewById(R.id.button1);
+                //Declaring TextView
+                final EditText page0 = (EditText) rootView.findViewById(R.id.editText1);
+                final EditText page1 = (EditText) rootView.findViewById(R.id.editText2);
+                final EditText page2 = (EditText) rootView.findViewById(R.id.editText3);
+                final EditText page3 = (EditText) rootView.findViewById(R.id.editText4);
+                final EditText page4 = (EditText) rootView.findViewById(R.id.editText5);
+                final EditText page5 = (EditText) rootView.findViewById(R.id.editText6);
+                final EditText page6 = (EditText) rootView.findViewById(R.id.editText7);
+                final EditText page7 = (EditText) rootView.findViewById(R.id.editText8);
+                final EditText page8 = (EditText) rootView.findViewById(R.id.editText9);
+                final EditText page9 = (EditText) rootView.findViewById(R.id.editText10);
+                final EditText page10 = (EditText) rootView.findViewById(R.id.editText11);
+                final EditText page11 = (EditText) rootView.findViewById(R.id.editText12);
+                final EditText page12 = (EditText) rootView.findViewById(R.id.editText13);
+                final EditText page13 = (EditText) rootView.findViewById(R.id.editText14);
+                final EditText page14 = (EditText) rootView.findViewById(R.id.editText15);
+                final EditText page15 = (EditText) rootView.findViewById(R.id.editText16);
+                
+				final CharSequence[] cs = new CharSequence[6];
+				cs[0] = "Convert hex to dec";
+				cs[1] = "Convert bin to dec";
+				cs[2] = "Convert dec to hex";
+				cs[3] = "Convert bin to hex";
+				cs[4] = "Convert hex to bin";
+				cs[5] = "Convert dec to bin";
+				final TextView text0 = (TextView) rootView.findViewById(R.id.textView1);
+				final TextView text1 = (TextView) rootView.findViewById(R.id.TextView2);
+				final TextView text2 = (TextView) rootView.findViewById(R.id.TextView3);
+				final TextView text3 = (TextView) rootView.findViewById(R.id.TextView4);
+				final TextView text4 = (TextView) rootView.findViewById(R.id.TextView5);
+				final TextView text5 = (TextView) rootView.findViewById(R.id.TextView6);
+				final TextView text6 = (TextView) rootView.findViewById(R.id.TextView7);
+				final TextView text7 = (TextView) rootView.findViewById(R.id.TextView8);
+				final TextView text8 = (TextView) rootView.findViewById(R.id.TextView9);
+				final TextView text9 = (TextView) rootView.findViewById(R.id.TextView10);
+				final TextView text10 = (TextView) rootView.findViewById(R.id.TextView11);
+				final TextView text11 = (TextView) rootView.findViewById(R.id.TextView12);
+				final TextView text12 = (TextView) rootView.findViewById(R.id.TextView13);
+				final TextView text13 = (TextView) rootView.findViewById(R.id.TextView14);
+				final TextView text14 = (TextView) rootView.findViewById(R.id.TextView15);
+				final TextView text15 = (TextView) rootView.findViewById(R.id.TextView16);
+
+
+				text0.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page0.setText(activity.HextoDec(page0.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page0.setText(activity.BintoDec(page0.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page0.setText(activity.DectoHex(page0.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page0.setText(activity.BintoHex(page0.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page0.setText(activity.HextoBin(page0.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page0.setText(activity.DectoBin(page0.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				
+				text1.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page1.setText(activity.HextoDec(page1.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page1.setText(activity.BintoDec(page1.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page1.setText(activity.DectoHex(page1.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page1.setText(activity.BintoHex(page1.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page1.setText(activity.HextoBin(page1.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page1.setText(activity.DectoBin(page1.getText().toString()));
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text2.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page2.setText(activity.HextoDec(page2.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page2.setText(activity.BintoDec(page2.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page2.setText(activity.DectoHex(page2.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page2.setText(activity.BintoHex(page2.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page2.setText(activity.HextoBin(page2.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page2.setText(activity.DectoBin(page2.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text3.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page3.setText(activity.HextoDec(page3.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page3.setText(activity.BintoDec(page3.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page3.setText(activity.DectoHex(page3.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page3.setText(activity.BintoHex(page3.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page3.setText(activity.HextoBin(page3.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page3.setText(activity.DectoBin(page3.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text4.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page4.setText(activity.HextoDec(page4.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page4.setText(activity.BintoDec(page4.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page4.setText(activity.DectoHex(page4.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page4.setText(activity.BintoHex(page4.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page4.setText(activity.HextoBin(page4.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page4.setText(activity.DectoBin(page4.getText().toString()));
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text5.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page5.setText(activity.HextoDec(page5.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page5.setText(activity.BintoDec(page5.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page5.setText(activity.DectoHex(page5.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page5.setText(activity.BintoHex(page5.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page5.setText(activity.HextoBin(page5.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page5.setText(activity.DectoBin(page5.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text6.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page6.setText(activity.HextoDec(page6.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page6.setText(activity.BintoDec(page6.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page6.setText(activity.DectoHex(page6.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page6.setText(activity.BintoHex(page6.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page6.setText(activity.HextoBin(page6.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page6.setText(activity.DectoBin(page6.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text7.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page7.setText(activity.HextoDec(page7.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page7.setText(activity.BintoDec(page7.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page7.setText(activity.DectoHex(page7.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page7.setText(activity.BintoHex(page7.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page7.setText(activity.HextoBin(page7.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page7.setText(activity.DectoBin(page7.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text8.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page8.setText(activity.HextoDec(page8.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page8.setText(activity.BintoDec(page8.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page8.setText(activity.DectoHex(page8.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page8.setText(activity.BintoHex(page8.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page8.setText(activity.HextoBin(page8.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page8.setText(activity.DectoBin(page8.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text9.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page9.setText(activity.HextoDec(page9.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page9.setText(activity.BintoDec(page9.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page9.setText(activity.DectoHex(page9.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page9.setText(activity.BintoHex(page9.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page9.setText(activity.HextoBin(page9.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page9.setText(activity.DectoBin(page9.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text10.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page10.setText(activity.HextoDec(page10.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page10.setText(activity.BintoDec(page10.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page10.setText(activity.DectoHex(page10.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page10.setText(activity.BintoHex(page10.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page10.setText(activity.HextoBin(page10.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page10.setText(activity.DectoBin(page10.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text11.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page11.setText(activity.HextoDec(page11.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page11.setText(activity.BintoDec(page11.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page11.setText(activity.DectoHex(page11.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page11.setText(activity.BintoHex(page11.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page11.setText(activity.HextoBin(page11.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page11.setText(activity.DectoBin(page11.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text12.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page12.setText(activity.HextoDec(page12.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page12.setText(activity.BintoDec(page12.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page12.setText(activity.DectoHex(page12.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page12.setText(activity.BintoHex(page12.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page12.setText(activity.HextoBin(page12.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page12.setText(activity.DectoBin(page12.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text13.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page13.setText(activity.HextoDec(page13.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page13.setText(activity.BintoDec(page13.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page13.setText(activity.DectoHex(page13.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page13.setText(activity.BintoHex(page13.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page13.setText(activity.HextoBin(page13.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page13.setText(activity.DectoBin(page13.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text14.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page14.setText(activity.HextoDec(page14.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page14.setText(activity.BintoDec(page14.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page14.setText(activity.DectoHex(page14.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page14.setText(activity.BintoHex(page14.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page14.setText(activity.HextoBin(page14.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page14.setText(activity.DectoBin(page14.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				text15.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+				    	AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Convertion");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+
+							try {
+								if(whichButton==0) {
+									page15.setText(activity.HextoDec(page15.getText().toString()).toUpperCase());
+								}
+								if(whichButton==1) {
+									page15.setText(activity.BintoDec(page15.getText().toString()).toUpperCase());
+								}
+								if(whichButton==2) {
+									page15.setText(activity.DectoHex(page15.getText().toString()).toUpperCase());
+								}
+								if(whichButton==3) {
+									page15.setText(activity.BintoHex(page15.getText().toString()).toUpperCase());
+								}
+								if(whichButton==4) {
+									page15.setText(activity.HextoBin(page15.getText().toString()).toUpperCase());
+								}
+								if(whichButton==5) {
+									page15.setText(activity.DectoBin(page15.getText().toString()).toUpperCase());
+								}
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+				            
+				    }
+				});
+				
+                btnEdt.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						MainActivity activity = (MainActivity) getActivity();
+						final ArrayList<String> options= activity.getDumpList();
+						final CharSequence[] cs = options.toArray(new CharSequence[options.size()]);
+						AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+						builder.setTitle("Select dump: ");
+						builder.setItems(cs, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+							try {
+
+						    	FileInputStream fis = activity.openFileInput((String) cs[whichButton]);
+						    	InputStreamReader isr = new InputStreamReader(fis);
+						    	BufferedReader bufferedReader = new BufferedReader(isr);
+						    	String line;
+						    	ArrayList<String> dataList = new ArrayList<String>();
+						    	while ((line = bufferedReader.readLine()) != null) {
+						    		dataList.add(line);
+						    	    
+						    	}
+						    	page0.setText(dataList.get(0));
+						    	page1.setText(dataList.get(1));
+						    	page2.setText(dataList.get(2));
+						    	page3.setText(dataList.get(3));
+						    	page4.setText(dataList.get(4));
+						    	page5.setText(dataList.get(5));
+						    	page6.setText(dataList.get(6));
+						    	page7.setText(dataList.get(7));
+						    	page8.setText(dataList.get(8));
+						    	page9.setText(dataList.get(9));
+						    	page10.setText(dataList.get(10));
+						    	page11.setText(dataList.get(11));
+						    	page12.setText(dataList.get(12));
+						    	page13.setText(dataList.get(13));
+						    	page14.setText(dataList.get(14));
+						    	page15.setText(dataList.get(15));
+						    	
+									
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+								e.printStackTrace();
+							}
+							};
+						});
+						builder.show();
+					}
+				});
+                
+                btnWrt.setOnClickListener(new View.OnClickListener() {
+        			public void onClick(View v) {
+        				try {
+        					//Preparing variables to perform UID check
+        					int uid0 = Integer.parseInt(page0.getText().toString().substring(0, 2), 16);
+        					int uid1 = Integer.parseInt(page0.getText().toString().substring(2, 4), 16);
+        					int uid2 = Integer.parseInt(page0.getText().toString().substring(4, 6), 16);
+        					int bcc1 = Integer.parseInt(page0.getText().toString().substring(6, 8), 16);
+        					int uid3 = Integer.parseInt(page1.getText().toString().substring(0, 2), 16);
+        					int uid4 = Integer.parseInt(page1.getText().toString().substring(2, 4), 16);
+        					int uid5 = Integer.parseInt(page1.getText().toString().substring(4, 6), 16);
+        					int uid6 = Integer.parseInt(page1.getText().toString().substring(6, 8), 16);
+        					int bcc2 = Integer.parseInt(page2.getText().toString().substring(0, 2), 16);
+        					
+        					//Performing XOR operation to check if UID's checksums are correct
+        					int bcc1Check = 0x88 ^ uid0 ^ uid1 ^ uid2;
+        					int bcc2Check = uid3 ^ uid4 ^ uid5 ^ uid6;
+    						final boolean continueBcc[] = {true};
+    						
+    						//If not prompt alert to user
+        					if(bcc1Check != bcc1) {
+        						new AlertDialog.Builder(getActivity())
+        					    .setTitle("Warning")
+        					    .setMessage("UID checksum BCC0 seems wrong. Correct value is: "+Integer.toHexString(bcc1Check).toUpperCase()+"\nDo you want to continue with your value?")
+        					    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+        					        public void onClick(DialogInterface dialog, int which) {
+        					        	continueBcc[0] = true;
+        					            dialog.cancel();
+        					        }
+        					     })
+        					     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+        					    	 public void onClick(DialogInterface dialog, int which) { 
+        					    		 continueBcc[0] = false;
+                					 }
+        					     })
+        					     .show();
+        					}
+        					if(bcc2Check != bcc2) {
+        						new AlertDialog.Builder(getActivity())
+        					    .setTitle("Warning")
+        					    .setMessage("UID checksum BCC1 seems wrong. Correct value is: "+Integer.toHexString(bcc2Check).toUpperCase()+"\nDo you want to continue with your value?")
+        					    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+        					        public void onClick(DialogInterface dialog, int which) {
+        					        	continueBcc[0] = true;
+        					            dialog.cancel();
+        					        }
+        					     })
+        					     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+        					    	 public void onClick(DialogInterface dialog, int which) { 
+        					    		 continueBcc[0] = false;
+                					 }
+        					     })
+        					     .show();
+        					}        						
+        					if(continueBcc[0] == true) {
+        						//Write pages to the ticket
+        						MifareUltralight ultralight = MifareUltralight.get(mytag);
+        						ultralight.connect();
+        						ultralight.writePage(0, hexStringToByteArray(page0.getText().toString()));
+        						ultralight.writePage(1, hexStringToByteArray(page1.getText().toString()));
+        						ultralight.writePage(2, hexStringToByteArray(page2.getText().toString()));
+        						ultralight.writePage(3, hexStringToByteArray(page3.getText().toString()));
+        						ultralight.writePage(4, hexStringToByteArray(page4.getText().toString()));
+        						ultralight.writePage(5, hexStringToByteArray(page5.getText().toString()));
+        						ultralight.writePage(6, hexStringToByteArray(page6.getText().toString()));
+        						ultralight.writePage(7, hexStringToByteArray(page7.getText().toString()));
+        						ultralight.writePage(8, hexStringToByteArray(page8.getText().toString()));
+        						ultralight.writePage(9, hexStringToByteArray(page9.getText().toString()));
+        						ultralight.writePage(10, hexStringToByteArray(page10.getText().toString()));
+        						ultralight.writePage(11, hexStringToByteArray(page11.getText().toString()));
+        						ultralight.writePage(12, hexStringToByteArray(page12.getText().toString()));
+        						ultralight.writePage(13, hexStringToByteArray(page13.getText().toString()));
+        						ultralight.writePage(14, hexStringToByteArray(page14.getText().toString()));
+        						ultralight.writePage(15, hexStringToByteArray(page15.getText().toString()));
+        						ultralight.close();
+        					}
+        				} catch(Exception e){
+        					Toast.makeText(getActivity(), "Error writing to Tag..", Toast.LENGTH_SHORT).show();
+        					e.printStackTrace();
+        				}
+        			}
+        		});
+                
+                //Button save dump
+				btnSave.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {				
+						//Create an AlertDialog to get filename for the dump
+						AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+						alert.setTitle("Dump Filename");
+						alert.setMessage("Insert filename for dump...");
+						final EditText input = new EditText(getActivity());
+						alert.setView(input);
+						alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							MainActivity activity = (MainActivity) getActivity();
+							try {
+								String value = input.getText().toString();
+								FileOutputStream fos = activity.openFileOutput(value+".mfd", Context.MODE_APPEND);
+								fos.write(page0.getText().toString().concat("\n").getBytes());
+								fos.write(page1.getText().toString().concat("\n").getBytes());
+								fos.write(page2.getText().toString().concat("\n").getBytes());
+								fos.write(page3.getText().toString().concat("\n").getBytes());
+								fos.write(page4.getText().toString().concat("\n").getBytes());
+								fos.write(page5.getText().toString().concat("\n").getBytes());
+								fos.write(page6.getText().toString().concat("\n").getBytes());
+								fos.write(page7.getText().toString().concat("\n").getBytes());
+								fos.write(page8.getText().toString().concat("\n").getBytes());
+								fos.write(page9.getText().toString().concat("\n").getBytes());
+								fos.write(page10.getText().toString().concat("\n").getBytes());
+								fos.write(page11.getText().toString().concat("\n").getBytes());
+								fos.write(page12.getText().toString().concat("\n").getBytes());
+								fos.write(page13.getText().toString().concat("\n").getBytes());
+								fos.write(page14.getText().toString().concat("\n").getBytes());
+								fos.write(page15.getText().toString().concat("\n").getBytes());
+								fos.close();
+								Toast.makeText(getActivity(),"Dump saved to: " + value, Toast.LENGTH_SHORT).show();
+							} catch (Exception e) {
+								Toast.makeText(activity, "There was an during the operation..", Toast.LENGTH_SHORT).show();
+							}
+						}
+						});
+						alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+						    Toast.makeText(getActivity(), "Insert dump name..", Toast.LENGTH_SHORT).show();
+						  }
+						});
+						alert.show();
+					}
+				});
+                
+                return rootView;
+        	}
+                
+                
         	else { 
                 View rootView = inflater.inflate(R.layout.fragment_main, container, false);
                 return rootView;
-        	}       
-        }
+        	}
+        }       
     }   
 }

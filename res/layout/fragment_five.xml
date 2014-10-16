@@ -282,6 +282,6 @@
         android:layout_alignBaseline="@+id/button9"
         android:layout_alignBottom="@+id/button9"
         android:layout_alignParentRight="true"
-        android:text="Read tag" />
+        android:text="Read Tag" />
 
 </RelativeLayout>

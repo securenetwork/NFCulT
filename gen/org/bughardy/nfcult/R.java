@@ -56,7 +56,7 @@ public final class R {
         public static final int TextView7=0x7f08002c;
         public static final int TextView8=0x7f08002d;
         public static final int TextView9=0x7f08002e;
-        public static final int button1=0x7f08003b;
+        public static final int button1=0x7f080038;
         public static final int button11=0x7f080036;
         public static final int button12=0x7f080013;
         public static final int button2=0x7f08003d;
@@ -84,12 +84,12 @@ public final class R {
         public static final int editText7=0x7f08001c;
         public static final int editText8=0x7f08001d;
         public static final int editText9=0x7f08001e;
-        public static final int imageView1=0x7f080039;
+        public static final int imageView1=0x7f08003a;
         public static final int pager=0x7f080000;
         public static final int scrollView1=0x7f080014;
         public static final int scrollView2=0x7f080001;
-        public static final int section_label=0x7f08003a;
-        public static final int textView0=0x7f080038;
+        public static final int section_label=0x7f08003b;
+        public static final int textView0=0x7f080039;
         public static final int textView1=0x7f080026;
         public static final int textView2=0x7f080044;
         public static final int textView3=0x7f08003c;
@@ -98,12 +98,13 @@ public final class R {
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int custom_dialog=0x7f030001;
-        public static final int fragment_five=0x7f030002;
-        public static final int fragment_four=0x7f030003;
-        public static final int fragment_main=0x7f030004;
-        public static final int fragment_one=0x7f030005;
-        public static final int fragment_three=0x7f030006;
-        public static final int fragment_two=0x7f030007;
+        public static final int fragment_edit_dump=0x7f030002;
+        public static final int fragment_five=0x7f030003;
+        public static final int fragment_four=0x7f030004;
+        public static final int fragment_main=0x7f030005;
+        public static final int fragment_one=0x7f030006;
+        public static final int fragment_three=0x7f030007;
+        public static final int fragment_two=0x7f030008;
     }
     public static final class menu {
         public static final int main=0x7f070000;
